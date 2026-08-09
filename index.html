@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SALINE PRO | Smart IV Monitoring</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-deep: #0a0e17;
+    --bg-card: #111827;
+    --bg-elevated: #1a2332;
+    --accent: #3b82f6;
+    --accent-soft: #60a5fa;
+    --accent-dark: #1e40af;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border: rgba(148, 163, 184, 0.12);
+    --glow: rgba(59, 130, 246, 0.15);
+    --success: #10b981;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  /* ========== CANVAS BACKGROUND ========== */
+  #bg-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ========== NAV ========== */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1.25rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(10, 14, 23, 0.75);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.4s ease;
+  }
+
+  nav.scrolled {
+    padding: 0.85rem 3rem;
+    background: rgba(10, 14, 23, 0.92);
+  }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .logo-icon {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px var(--glow);
+    animation: pulse-glow 3s ease-in-out infinite;
+  }
+
+  .logo-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 4px 20px var(--glow); }
+    50% { box-shadow: 0 4px 30px rgba(59, 130, 246, 0.35); }
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.3s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--accent);
+    transition: width 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: var(--text-primary);
+  }
+
+  .nav-links a:hover::after {
+    width: 100%;
+  }
+
+  .nav-cta {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    padding: 0.65rem 1.4rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px var(--glow);
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+  }
+
+  /* ========== HERO ========== */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+    padding: 8rem 3rem 4rem;
+    perspective: 1200px;
+  }
+
+  .hero-content {
+    max-width: 1200px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .hero-text {
+    animation: fadeUp 1s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.25);
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--accent-soft);
+    margin-bottom: 1.5rem;
+    animation: fadeUp 1s ease-out 0.1s both;
+  }
+
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--success);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero h1 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(2.8rem, 5vw, 4.2rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 1.25rem;
+    animation: fadeUp 1s ease-out 0.2s both;
+  }
+
+  .hero h1 span {
+    background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 1s ease-out 0.3s both;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    animation: fadeUp 1s ease-out 0.4s both;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    padding: 0.95rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 6px 25px var(--glow);
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 12px 35px rgba(59, 130, 246, 0.35);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    padding: 0.95rem 2rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    border: 1px solid var(--border);
+    transition: all 0.35s;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(148, 163, 184, 0.3);
+    transform: translateY(-2px);
+  }
+
+  /* 3D Device Card */
+  .hero-visual {
+    position: relative;
+    height: 480px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeUp 1.2s ease-out 0.3s both;
+  }
+
+  .device-3d {
+    width: 280px;
+    height: 360px;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: float3d 6s ease-in-out infinite;
+    cursor: pointer;
+  }
+
+  @keyframes float3d {
+    0%, 100% { transform: rotateY(-15deg) rotateX(8deg) translateY(0); }
+    50% { transform: rotateY(15deg) rotateX(-5deg) translateY(-20px); }
+  }
+
+  .device-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 24px;
+    background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+    box-shadow: 
+      0 25px 60px rgba(0,0,0,0.5),
+      0 0 0 1px rgba(255,255,255,0.03) inset,
+      0 0 40px var(--glow);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    overflow: hidden;
+  }
+
+  .device-face::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40%;
+    background: linear-gradient(180deg, rgba(59,130,246,0.08), transparent);
+    pointer-events: none;
+  }
+
+  .device-screen {
+    width: 100%;
+    height: 180px;
+    background: #0a0e17;
+    border-radius: 12px;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .flow-bar {
+    width: 70%;
+    height: 8px;
+    background: rgba(59, 130, 246, 0.15);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .flow-fill {
+    height: 100%;
+    width: 65%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-soft));
+    border-radius: 4px;
+    animation: flowPulse 2.5s ease-in-out infinite;
+  }
+
+  @keyframes flowPulse {
+    0%, 100% { width: 65%; opacity: 1; }
+    50% { width: 78%; opacity: 0.85; }
+  }
+
+  .ml-display {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-soft);
+  }
+
+  .ml-label {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .alert-indicator {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 10px;
+    height: 10px;
+    background: var(--success);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--success);
+    animation: alertPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes alertPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.7; }
+  }
+
+  .device-label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .orbit-ring {
+    position: absolute;
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 50%;
+    animation: orbitSpin 20s linear infinite;
+  }
+
+  .orbit-ring:nth-child(1) {
+    width: 340px;
+    height: 340px;
+    animation-duration: 25s;
+  }
+
+  .orbit-ring:nth-child(2) {
+    width: 420px;
+    height: 420px;
+    animation-duration: 35s;
+    animation-direction: reverse;
+    border-style: dashed;
+  }
+
+  .orbit-dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px var(--accent);
+  }
+
+  @keyframes orbitSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* ========== STATS BAR ========== */
+  .stats-bar {
+    position: relative;
+    z-index: 1;
+    max-width: 1100px;
+    margin: -2rem auto 0;
+    padding: 0 2rem;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    background: rgba(17, 24, 39, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+  }
+
+  .stat-item {
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.6s ease;
+  }
+
+  .stat-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .stat-value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.85rem;
+    font-weight: 700;
+    color: var(--accent-soft);
+    margin-bottom: 0.25rem;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  /* ========== SECTIONS ========== */
+  section {
+    position: relative;
+    z-index: 1;
+    padding: 6rem 3rem;
+  }
+
+  .section-header {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto 4rem;
+  }
+
+  .section-tag {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent-soft);
+    margin-bottom: 0.75rem;
+  }
+
+  .section-header h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+
+  .section-header p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+  }
+
+  /* ========== PROBLEM ========== */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .problem-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    transform: translateY(30px);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .problem-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .problem-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+
+  .problem-card:hover {
+    transform: translateY(-8px);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25), 0 0 30px var(--glow);
+  }
+
+  .problem-card:hover::before {
+    opacity: 1;
+  }
+
+  .problem-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(59, 130, 246, 0.1);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+    font-size: 1.4rem;
+  }
+
+  .problem-card h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .problem-card p {
+    color: var(--text-secondary);
+    font-size: 0.925rem;
+  }
+
+  /* ========== SOLUTION ========== */
+  .solution-section {
+    background: linear-gradient(180deg, transparent, rgba(59, 130, 246, 0.03), transparent);
+  }
+
+  .solution-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.75rem;
+    text-align: center;
+    transition: all 0.4s;
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  .feature-card.visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px) scale(1.02);
+    border-color: rgba(59, 130, 246, 0.35);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+  }
+
+  .feature-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 1.25rem;
+    background: linear-gradient(135deg, rgba(59,130,246,0.15), rgba(30,64,175,0.1));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+  }
+
+  .feature-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .feature-card p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* ========== VALIDATION ========== */
+  .validation-card {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3rem;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s ease;
+  }
+
+  .validation-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .validation-card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(59,130,246,0.08), transparent 70%);
+    pointer-events: none;
+  }
+
+  .validation-header {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .validation-badge {
+    background: rgba(16, 185, 129, 0.12);
+    color: var(--success);
+    padding: 0.35rem 0.9rem;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+  }
+
+  .validation-card h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .validation-meta {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .validation-quote {
+    font-style: italic;
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    line-height: 1.7;
+    border-left: 3px solid var(--accent);
+    padding-left: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .validation-author {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+  }
+
+  .validation-role {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* ========== TESTING SOFTWARE ========== */
+  .testing-section {
+    background: linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(10, 14, 23, 0.95));
+  }
+
+  .testing-box {
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--bg-elevated);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 20px;
+    padding: 3.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.3), 0 0 40px var(--glow);
+  }
+
+  .testing-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(59,130,246,0.05), transparent 50%);
+    pointer-events: none;
+  }
+
+  .testing-box h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .testing-box p {
+    color: var(--text-secondary);
+    font-size: 1.05rem;
+    max-width: 520px;
+    margin: 0 auto 2rem;
+  }
+
+  .btn-test {
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: white;
+    padding: 1.1rem 2.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 30px var(--glow);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-test::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+    transition: left 0.5s;
+  }
+
+  .btn-test:hover::before {
+    left: 100%;
+  }
+
+  .btn-test:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 15px 40px rgba(59, 130, 246, 0.4);
+  }
+
+  /* ========== MARKET ========== */
+  .market-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+  }
+
+  .market-stat {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: all 0.4s;
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  .market-stat.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .market-stat:hover {
+    transform: translateY(-6px);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  .market-stat .value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--accent-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  .market-stat .label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .market-note {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    background: rgba(59, 130, 246, 0.06);
+    border: 1px solid rgba(59, 130, 246, 0.15);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+  }
+
+  /* ========== BUSINESS MODEL ========== */
+  .model-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .model-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 2.25rem;
+    transition: all 0.45s;
+    opacity: 0;
+    transform: translateY(30px);
+    position: relative;
+  }
+
+  .model-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .model-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    border-color: rgba(59, 130, 246, 0.25);
+  }
+
+  .model-card .price {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--accent-soft);
+    margin-bottom: 0.25rem;
+  }
+
+  .model-card .price-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  .model-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  .model-card ul {
+    list-style: none;
+  }
+
+  .model-card li {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    padding: 0.4rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+
+  .model-card li::before {
+    content: '→';
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  /* ========== COMPETITIVE ========== */
+  .comp-table-wrap {
+    max-width: 900px;
+    margin: 0 auto;
+    overflow-x: auto;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  th, td {
+    padding: 1.1rem 1.25rem;
+    text-align: center;
+    font-size: 0.9rem;
+  }
+
+  th {
+    background: rgba(59, 130, 246, 0.08);
+    font-weight: 600;
+    color: var(--text-primary);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+  }
+
+  tr:last-child td {
+    border-bottom: none;
+  }
+
+  td:first-child, th:first-child {
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .highlight-col {
+    background: rgba(59, 130, 246, 0.06);
+  }
+
+  .check { color: var(--success); font-weight: 700; }
+  .cross { color: var(--text-muted); }
+
+  /* ========== ROADMAP ========== */
+  .roadmap {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .roadmap::before {
+    content: '';
+    position: absolute;
+    top: 40px;
+    left: 15%;
+    right: 15%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), rgba(59,130,246,0.3));
+    z-index: 0;
+  }
+
+  .phase {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    transform: translateY(25px);
+    transition: all 0.5s;
+  }
+
+  .phase.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .phase:hover {
+    transform: translateY(-6px);
+    border-color: rgba(59, 130, 246, 0.3);
+  }
+
+  .phase-num {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+    box-shadow: 0 4px 15px var(--glow);
+  }
+
+  .phase h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.35rem;
+  }
+
+  .phase-time {
+    font-size: 0.8rem;
+    color: var(--accent-soft);
+    margin-bottom: 1.25rem;
+  }
+
+  .phase ul {
+    list-style: none;
+  }
+
+  .phase li {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    padding: 0.35rem 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .phase li::before {
+    content: '✓';
+    color: var(--success);
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  /* ========== TEAM ========== */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .team-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 2.5rem;
+    text-align: center;
+    transition: all 0.4s;
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  .team-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .team-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+  }
+
+  .team-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.5rem;
+    margin: 0 auto 1.25rem;
+    box-shadow: 0 8px 25px var(--glow);
+  }
+
+  .team-card h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .team-role {
+    color: var(--accent-soft);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+
+  .team-card p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  /* ========== ASK / CTA ========== */
+  .ask-section {
+    text-align: center;
+    padding-bottom: 8rem;
+  }
+
+  .ask-box {
+    max-width: 700px;
+    margin: 0 auto;
+    background: linear-gradient(160deg, var(--bg-elevated), var(--bg-card));
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 24px;
+    padding: 3.5rem;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.35), 0 0 50px var(--glow);
+  }
+
+  .ask-box h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+  }
+
+  .ask-box > p {
+    color: var(--text-secondary);
+    margin-bottom: 2.5rem;
+  }
+
+  .ask-numbers {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+
+  .ask-num {
+    text-align: center;
+  }
+
+  .ask-num .val {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-soft);
+  }
+
+  .ask-num .lbl {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .ask-deliverables {
+    text-align: left;
+    background: rgba(10, 14, 23, 0.5);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .ask-deliverables li {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    padding: 0.35rem 0;
+    list-style: none;
+  }
+
+  .ask-deliverables li::before {
+    content: '• ';
+    color: var(--accent);
+  }
+
+  /* ========== FOOTER ========== */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: rgba(10, 14, 23, 0.9);
+  }
+
+  footer p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  footer a {
+    color: var(--accent-soft);
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width: 1024px) {
+    .hero-content {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+    .hero-sub { margin-left: auto; margin-right: auto; }
+    .hero-actions { justify-content: center; }
+    .hero-visual { height: 400px; }
+    .stats-grid, .problem-grid, .solution-grid, .market-grid, .model-grid, .roadmap {
+      grid-template-columns: 1fr 1fr;
+    }
+    .solution-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    .stats-grid, .problem-grid, .solution-grid, .market-grid, .model-grid, .roadmap, .team-grid {
+      grid-template-columns: 1fr;
+    }
+    .roadmap::before { display: none; }
+    .ask-numbers { gap: 1.5rem; }
+    footer { flex-direction: column; text-align: center; }
+  }
+
+  /* Scroll reveal helper */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="#" class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14.5v-9l7 4.5-7 4.5z"/></svg>
+    </div>
+    SALINE PRO
+  </a>
+  <ul class="nav-links">
+    <li><a href="#problem">Problem</a></li>
+    <li><a href="#solution">Solution</a></li>
+    <li><a href="#validation">Validation</a></li>
+    <li><a href="#testing">Live Demo</a></li>
+    <li><a href="#market">Market</a></li>
+    <li><a href="#team">Team</a></li>
+  </ul>
+  <a href="#ask" class="nav-cta">Invest Now</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="badge">
+        <span class="badge-dot"></span>
+        Hospital Validated · 2026
+      </div>
+      <h1>Smart IV Monitoring.<br><span>Real-Time. Always-On.</span></h1>
+      <p class="hero-sub">A device + app that sends live saline alerts to nurses' phones — eliminating manual IV checks and preventing patient incidents.</p>
+      <div class="hero-actions">
+        <a href="#testing" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Try Live Demo
+        </a>
+        <a href="#solution" class="btn-secondary">Explore Product</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      <div class="orbit-ring"><div class="orbit-dot"></div></div>
+      <div class="device-3d" id="device3d">
+        <div class="device-face">
+          <div class="device-screen">
+            <div class="alert-indicator"></div>
+            <div class="ml-display">487 <span style="font-size:0.9rem;font-weight:500">mL</span></div>
+            <div class="ml-label">Remaining</div>
+            <div class="flow-bar"><div class="flow-fill"></div></div>
+            <div class="ml-label" style="margin-top:0.25rem">Flow: 42 mL/hr</div>
+          </div>
+          <div class="device-label">SalinePro Sensor</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div class="stat-item">
+      <div class="stat-value">70,000+</div>
+      <div class="stat-label">Hospitals in India</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">₹4,000</div>
+      <div class="stat-label">Unit Price</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">66%</div>
+      <div class="stat-label">Gross Margin</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">₹30L</div>
+      <div class="stat-label">Raising @ 10%</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-header">
+    <div class="section-tag">The Problem</div>
+    <h2>A nurse walks 3 km a day just checking saline drips</h2>
+    <p>India has 70,000+ hospitals — most relying entirely on manual IV monitoring.</p>
+  </div>
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="problem-icon">👩‍⚕️</div>
+      <h3>Nurse Overload</h3>
+      <p>1 nurse manages 5–10 patients simultaneously, stretching attention thin across critical tasks.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">🚶</div>
+      <h3>Manual Checks</h3>
+      <p>IV checked every 30–45 minutes by walking to bedside — inefficient and error-prone.</p>
+    </div>
+    <div class="problem-card">
+      <div class="problem-icon">⚠️</div>
+      <h3>Missed Alerts</h3>
+      <p>Air embolism risk when saline runs dry unnoticed. Preventable patient harm every day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION -->
+<section id="solution" class="solution-section">
+  <div class="section-header">
+    <div class="section-tag">Our Solution</div>
+    <h2>SalinePro — Real-time. Always-on.</h2>
+    <p>A sensor clipped to the IV drip set measures flow rate and remaining volume — and sends instant alerts to the nurse's phone before saline runs out.</p>
+  </div>
+  <div class="solution-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📡</div>
+      <h3>Live Flow Rate</h3>
+      <p>& mL remaining tracked in real time</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>Push Alerts</h3>
+      <p>Instant notifications to nurse phones</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>App Dashboard</h3>
+      <p>Monitor all patients from one screen</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔗</div>
+      <h3>WiFi / BLE</h3>
+      <p>Seamless hospital connectivity</p>
+    </div>
+  </div>
+</section>
+
+<!-- VALIDATION -->
+<section id="validation">
+  <div class="section-header">
+    <div class="section-tag">Hospital Validation</div>
+    <h2>Tested and certified by a real hospital</h2>
+  </div>
+  <div class="validation-card">
+    <div class="validation-header">
+      <span class="validation-badge">✓ Certified</span>
+    </div>
+    <h3>Saveetha Medical College & Hospital</h3>
+    <div class="validation-meta">
+      Certificate Ref: SMCH/DEV-EVAL/2026/SC0426001 · Date: 24 May 2026<br>
+      Device IDs tested: SC0426001, SC0426002, SC0426003
+    </div>
+    <blockquote class="validation-quote">
+      "The product was observed and assessed for functionality, usability, and practical applicability — and was found to function satisfactorily for its intended healthcare use."
+    </blockquote>
+    <div class="validation-author">Dr. H. Gowtham</div>
+    <div class="validation-role">Head of Clinics · Saveetha Medical College</div>
+  </div>
+</section>
+
+<!-- TESTING SOFTWARE -->
+<section id="testing" class="testing-section">
+  <div class="testing-box">
+    <div class="section-tag" style="margin-bottom:0.75rem">Product Testing Software</div>
+    <h2>Experience SalinePro Live</h2>
+    <p>Our product testing software web portal lets you interact with the SalinePro monitoring interface — see real-time flow data, alerts, and the nurse dashboard in action.</p>
+    <a href="https://wasimshaikai.github.io/finalsaline/" target="_blank" rel="noopener noreferrer" class="btn-test">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      Open Testing Portal
+    </a>
+  </div>
+</section>
+
+<!-- MARKET -->
+<section id="market">
+  <div class="section-header">
+    <div class="section-tag">Market Opportunity</div>
+    <h2>A massive, underserved gap in Indian healthcare</h2>
+  </div>
+  <div class="market-grid">
+    <div class="market-stat">
+      <div class="value">70,000+</div>
+      <div class="label">Hospitals in India</div>
+    </div>
+    <div class="market-stat">
+      <div class="value">15–20L</div>
+      <div class="label">Hospital beds nationwide</div>
+    </div>
+    <div class="market-stat">
+      <div class="value">₹2–5L</div>
+      <div class="label">Competitor smart pumps</div>
+    </div>
+    <div class="market-stat">
+      <div class="value">₹4,000</div>
+      <div class="label">SalinePro unit price</div>
+    </div>
+  </div>
+  <div class="market-note">
+    <strong>Immediate target:</strong> 5,000 small-to-mid hospitals in Tier 2 & 3 cities that cannot afford ₹2–5L smart pumps. At 20 units per hospital × ₹4,000 = ₹40L revenue per 50 hospitals onboarded.
+  </div>
+</section>
+
+<!-- BUSINESS MODEL -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">Business Model</div>
+    <h2>Hardware + AMC + SaaS</h2>
+    <p>Three revenue streams from every device.</p>
+  </div>
+  <div class="model-grid">
+    <div class="model-card">
+      <div class="price">₹4,000</div>
+      <div class="price-label">per unit (one-time)</div>
+      <h3>Hardware</h3>
+      <ul>
+        <li>Cost to make: ₹1,350</li>
+        <li>Gross margin: 66%</li>
+        <li>250 units first batch</li>
+        <li>~50 units/hospital avg</li>
+      </ul>
+    </div>
+    <div class="model-card">
+      <div class="price">₹1,500</div>
+      <div class="price-label">per device / year</div>
+      <h3>AMC</h3>
+      <ul>
+        <li>Notification cost: ₹300/yr</li>
+        <li>Profit: ₹1,200/device/yr</li>
+        <li>App + alerts + maintenance</li>
+        <li>Auto-renews every year</li>
+      </ul>
+    </div>
+    <div class="model-card">
+      <div class="price">₹25,000</div>
+      <div class="price-label">per hospital / month</div>
+      <h3>SaaS Dashboard</h3>
+      <ul>
+        <li>Live alerts & flow analytics</li>
+        <li>Patient-level reports</li>
+        <li>Multi-ward dashboard</li>
+        <li>Scales to any ward size</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- COMPETITIVE -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">Competitive Landscape</div>
+    <h2>We fill a gap nobody else is serving</h2>
+  </div>
+  <div class="comp-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Smart Pumps<br><small style="font-weight:400;color:var(--text-muted)">(B.Braun, BD)</small></th>
+          <th>Manual<br>Monitoring</th>
+          <th class="highlight-col">SalinePro</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cost per unit</td>
+          <td>₹2–5 Lakh</td>
+          <td>₹0</td>
+          <td class="highlight-col"><strong>₹4,000</strong></td>
+        </tr>
+        <tr>
+          <td>Real-time alerts</td>
+          <td class="check">✓</td>
+          <td class="cross">✗</td>
+          <td class="highlight-col check">✓</td>
+        </tr>
+        <tr>
+          <td>Works on existing drips</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="highlight-col check">✓</td>
+        </tr>
+        <tr>
+          <td>Nurse phone alerts</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="highlight-col check">✓</td>
+        </tr>
+        <tr>
+          <td>Target: small hospitals</td>
+          <td class="cross">✗</td>
+          <td class="check">✓</td>
+          <td class="highlight-col check">✓</td>
+        </tr>
+        <tr>
+          <td>SaaS recurring revenue</td>
+          <td class="cross">✗</td>
+          <td class="cross">✗</td>
+          <td class="highlight-col check">✓</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ROADMAP -->
+<section>
+  <div class="section-header">
+    <div class="section-tag">Roadmap</div>
+    <h2>From first 250 units to scale</h2>
+  </div>
+  <div class="roadmap">
+    <div class="phase">
+      <div class="phase-num">1</div>
+      <h3>Phase 1</h3>
+      <div class="phase-time">0–3 months</div>
+      <ul>
+        <li>Manufacture 250 units</li>
+        <li>2–5 hospital trials</li>
+        <li>CDSCO Class B filing</li>
+        <li>Hire 2 sales people</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-num">2</div>
+      <h3>Phase 2</h3>
+      <div class="phase-time">6–12 months</div>
+      <ul>
+        <li>Scale to 50 hospitals</li>
+        <li>SaaS MRR: ₹2.5L/mo</li>
+        <li>Regulatory approval</li>
+        <li>Series A preparation</li>
+      </ul>
+    </div>
+    <div class="phase">
+      <div class="phase-num">3</div>
+      <h3>Phase 3</h3>
+      <div class="phase-time">Year 2–3</div>
+      <ul>
+        <li>300+ hospitals</li>
+        <li>20,000+ units</li>
+        <li>Pan-India distribution</li>
+        <li>₹7–12Cr revenue run-rate</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team">
+  <div class="section-header">
+    <div class="section-tag">The Team</div>
+    <h2>Built by founders who understand the problem</h2>
+  </div>
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="team-avatar">WS</div>
+      <h3>Wasim Shaik</h3>
+      <div class="team-role">Co-Founder</div>
+      <p>App & backend development · Cloud infrastructure · Hospital relationship lead</p>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar">ITK</div>
+      <h3>I Tahir Khan</h3>
+      <div class="team-role">Co-Founder</div>
+      <p>Hardware & embedded systems · Device design & prototyping · Product development lead</p>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:2rem;color:var(--text-muted);font-size:0.9rem">
+    Supported by: Saveetha Medical College (clinical evaluation partner)
+  </p>
+</section>
+
+<!-- THE ASK -->
+<section id="ask" class="ask-section">
+  <div class="ask-box">
+    <h2>Join us in eliminating preventable patient harm</h2>
+    <p>Raising capital to manufacture, certify, and launch across India.</p>
+    <div class="ask-numbers">
+      <div class="ask-num">
+        <div class="val">₹30 Lakhs</div>
+        <div class="lbl">Raising</div>
+      </div>
+      <div class="ask-num">
+        <div class="val">10%</div>
+        <div class="lbl">Equity</div>
+      </div>
+      <div class="ask-num">
+        <div class="val">₹3.00 Cr</div>
+        <div class="lbl">Post-money</div>
+      </div>
+    </div>
+    <ul class="ask-deliverables">
+      <li>250 units manufactured & deployed</li>
+      <li>CDSCO regulatory filing</li>
+      <li>5–10 hospital launch customers</li>
+      <li>SaaS recurring revenue established</li>
+      <li>Clinical data for Series A</li>
+    </ul>
+    <a href="mailto:salineprotw@gmail.com" class="btn-primary" style="font-size:1rem;padding:1.1rem 2.5rem">
+      Contact Founders
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 SALINE PRO · Chennai, India</p>
+  <p>
+    <a href="mailto:salineprotw@gmail.com">salineprotw@gmail.com</a>
+    · Wasim Shaik & I Tahir Khan
+  </p>
+</footer>
+
+<script>
+  // ========== PARTICLE / 3D BACKGROUND ==========
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  let mouse = { x: null, y: null };
+  let width, height;
+
+  function resize() {
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  class Particle {
+    constructor() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.z = Math.random() * 1000;
+      this.size = Math.random() * 1.8 + 0.4;
+      this.speed = Math.random() * 0.3 + 0.05;
+      this.opacity = Math.random() * 0.4 + 0.1;
+    }
+    update() {
+      this.z -= this.speed * 2;
+      if (this.z <= 0) {
+        this.z = 1000;
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+      }
+      // subtle mouse influence
+      if (mouse.x !== null) {
+        const dx = this.x - mouse.x;
+        const dy = this.y - mouse.y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 150) {
+          this.x += dx * 0.01;
+          this.y += dy * 0.01;
+        }
+      }
+    }
+    draw() {
+      const scale = 400 / (400 + this.z);
+      const x2d = (this.x - width/2) * scale + width/2;
+      const y2d = (this.y - height/2) * scale + height/2;
+      const s = this.size * scale;
+      ctx.beginPath();
+      ctx.arc(x2d, y2d, s, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(96, 165, 250, ${this.opacity * scale})`;
+      ctx.fill();
+    }
+  }
+
+  for (let i = 0; i < 120; i++) particles.push(new Particle());
+
+  // Connection lines
+  function drawConnections() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const p1 = particles[i], p2 = particles[j];
+        const scale1 = 400 / (400 + p1.z);
+        const scale2 = 400 / (400 + p2.z);
+        const x1 = (p1.x - width/2) * scale1 + width/2;
+        const y1 = (p1.y - height/2) * scale1 + height/2;
+        const x2 = (p2.x - width/2) * scale2 + width/2;
+        const y2 = (p2.y - height/2) * scale2 + height/2;
+        const dx = x1 - x2, dy = y1 - y2;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 100) {
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(x2, y2);
+          ctx.strokeStyle = `rgba(59, 130, 246, ${0.08 * (1 - dist/100)})`;
+          ctx.lineWidth = 0.6;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+    // subtle gradient overlay
+    const grad = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, width*0.7);
+    grad.addColorStop(0, 'rgba(30, 64, 175, 0.03)');
+    grad.addColorStop(1, 'transparent');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, width, height);
+
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawConnections();
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  document.addEventListener('mousemove', e => {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+
+  // ========== NAV SCROLL ==========
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ========== 3D DEVICE MOUSE TILT ==========
+  const device = document.getElementById('device3d');
+  if (device) {
+    document.querySelector('.hero-visual').addEventListener('mousemove', e => {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      device.style.animation = 'none';
+      device.style.transform = `rotateY(${x * 35}deg) rotateX(${-y * 25}deg) translateY(-10px)`;
+    });
+    document.querySelector('.hero-visual').addEventListener('mouseleave', () => {
+      device.style.animation = 'float3d 6s ease-in-out infinite';
+      device.style.transform = '';
+    });
+  }
+
+  // ========== SCROLL REVEAL ==========
+  const observerOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, (entry.target.dataset.delay || 0));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+
+  document.querySelectorAll('.stat-item, .problem-card, .feature-card, .validation-card, .market-stat, .model-card, .phase, .team-card').forEach((el, i) => {
+    el.dataset.delay = (i % 4) * 80;
+    observer.observe(el);
+  });
+
+  // Smooth counter animation for stats (simple)
+  function animateValue(el, end, duration) {
+    const start = 0;
+    const range = end - start;
+    const startTime = performance.now();
+    function step(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      // keep original text for non-numeric heavy values
+    }
+  }
+</script>
+</body>
+</html>
