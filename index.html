@@ -227,6 +227,10 @@
     background: rgba(10, 14, 23, 0.92);
   }
 
+  nav.nav-hidden {
+    transform: translateY(-100%);
+  }
+
   .logo {
     font-family: 'Space Grotesk', sans-serif;
     font-weight: 700;
@@ -366,7 +370,7 @@
   }
 
   .hero-text {
-    animation: fadeUp 1s ease-out;
+    animation: fadeUp 1s ease-out forwards;
   }
 
   @keyframes fadeUp {
@@ -713,6 +717,60 @@
     to { transform: rotate(360deg); }
   }
 
+  /* ========== SCROLL CUE ========== */
+  .scroll-cue {
+    position: absolute;
+    left: 50%;
+    bottom: 1.75rem;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: none;
+    opacity: 0;
+    animation: fadeUp 0.9s ease-out 1.4s forwards;
+    z-index: 2;
+  }
+
+  .scroll-cue span {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .scroll-cue-line {
+    width: 1px;
+    height: 34px;
+    background: rgba(148, 163, 184, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .scroll-cue-dot {
+    position: absolute;
+    top: -10px;
+    left: -1.5px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    box-shadow: 0 0 6px var(--accent-soft);
+    animation: cueDrop 1.8s ease-in-out infinite;
+  }
+
+  @keyframes cueDrop {
+    0% { top: -10px; opacity: 0; }
+    30% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { top: 34px; opacity: 0; }
+  }
+
+  @media (max-width: 1024px) {
+    .scroll-cue { display: none; }
+  }
+
   /* ========== TICKER MARQUEE ========== */
   .ticker-wrap {
     position: relative;
@@ -722,6 +780,9 @@
     border-bottom: 1px solid var(--border);
     background: rgba(17, 24, 39, 0.5);
     padding: 0.9rem 0;
+    margin-top: 3.5rem;
+    mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
   }
 
   .ticker-track {
@@ -810,6 +871,7 @@
     position: relative;
     z-index: 1;
     padding: 6rem 3rem;
+    scroll-margin-top: 88px;
   }
 
   .section-header {
@@ -852,6 +914,15 @@
     font-weight: 700;
     letter-spacing: -0.02em;
     margin-bottom: 1rem;
+    clip-path: inset(0 0 0 0);
+  }
+
+  .section-header:not(.visible) h2 {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .section-header h2 {
+    transition: clip-path 0.8s cubic-bezier(0.16,1,0.3,1) 0.1s;
   }
 
   .section-header p {
@@ -1364,7 +1435,12 @@
 
   table {
     width: 100%;
+    min-width: 620px;
     border-collapse: collapse;
+  }
+
+  tbody tr:nth-child(even) td {
+    background: rgba(255,255,255,0.012);
   }
 
   th, td {
@@ -1402,6 +1478,16 @@
     text-align: left;
     font-weight: 500;
     color: var(--text-primary);
+  }
+
+  @media (max-width: 700px) {
+    td:first-child, th:first-child {
+      position: sticky;
+      left: 0;
+      background: var(--bg-card);
+      z-index: 1;
+    }
+    th:first-child { background: rgba(59,130,246,0.08); }
   }
 
   .highlight-col {
@@ -1884,23 +1970,11 @@
       </div>
     </div>
   </div>
-</section>
-
-<!-- TICKER -->
-<div class="ticker-wrap">
-  <div class="ticker-track">
-    <span>Real-Time Flow Tracking</span>
-    <span>Instant Nurse Alerts</span>
-    <span>Hospital Validated</span>
-    <span>₹4,000 Per Unit</span>
-    <span>66% Gross Margin</span>
-    <span>Real-Time Flow Tracking</span>
-    <span>Instant Nurse Alerts</span>
-    <span>Hospital Validated</span>
-    <span>₹4,000 Per Unit</span>
-    <span>66% Gross Margin</span>
+  <div class="scroll-cue" id="scrollCue">
+    <span>Scroll</span>
+    <div class="scroll-cue-line"><div class="scroll-cue-dot"></div></div>
   </div>
-</div>
+</section>
 
 <!-- STATS -->
 <div class="stats-bar">
@@ -1921,6 +1995,24 @@
       <div class="stat-value" data-count="30" data-prefix="₹" data-suffix="L">0</div>
       <div class="stat-label">Raising @ 5%</div>
     </div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span>Real-Time Flow Tracking</span>
+    <span>Instant Nurse Alerts</span>
+    <span>Hospital Validated</span>
+    <span>₹4,000 Per Unit</span>
+    <span>66% Gross Margin</span>
+    <span>5-Year Roadmap</span>
+    <span>Real-Time Flow Tracking</span>
+    <span>Instant Nurse Alerts</span>
+    <span>Hospital Validated</span>
+    <span>₹4,000 Per Unit</span>
+    <span>66% Gross Margin</span>
+    <span>5-Year Roadmap</span>
   </div>
 </div>
 
@@ -2100,7 +2192,7 @@
     <table>
       <thead>
         <tr>
-          <th></th>
+          <th><span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Feature</span></th>
           <th>Smart Pumps<br><small style="font-weight:400;color:var(--text-muted)">(B.Braun, BD)</small></th>
           <th>Manual<br>Monitoring</th>
           <th class="highlight-col">SalinePro</th>
@@ -2243,7 +2335,7 @@
       <li>SaaS recurring revenue established</li>
       <li>Clinical data for Series A</li>
     </ul>
-    <a href="mailto:salineprotw@gmail.com" class="btn-primary magnetic" style="font-size:1rem;padding:1.1rem 2.5rem">
+    <a href="mailto:admin@salinepro.shop" class="btn-primary magnetic" style="font-size:1rem;padding:1.1rem 2.5rem">
       Contact Founders
     </a>
   </div>
@@ -2253,7 +2345,7 @@
 <footer>
   <p>© 2026 SALINE PRO · Chennai, India</p>
   <p>
-    <a href="mailto:salineprotw@gmail.com">salineprotw@gmail.com</a>
+    <a href="mailto:admin@salinepro.shop">admin@salinepro.shop</a>
     · Wasim Shaik & I Tahir Khan
   </p>
 </footer>
@@ -2269,6 +2361,18 @@
     setTimeout(() => {
       document.getElementById('preloader').classList.add('done');
     }, 1500);
+  });
+
+  // Release the nav's load-in animation once it finishes so scroll-based
+  // hide/show classes can take over the transform cleanly.
+  const navEl = document.getElementById('navbar');
+  navEl.addEventListener('animationend', function releaseNavAnim(e) {
+    if (e.animationName === 'navDrop') {
+      navEl.style.animation = 'none';
+      navEl.style.opacity = '1';
+      navEl.style.transform = '';
+      navEl.removeEventListener('animationend', releaseNavAnim);
+    }
   });
 
   // ========== CUSTOM CURSOR ==========
@@ -2293,7 +2397,7 @@
     }
     ringLoop();
 
-    document.querySelectorAll('a, button, .problem-card, .feature-card, .model-card, .phase, .team-card, .market-stat').forEach(el => {
+    document.querySelectorAll('a, button, .problem-card, .feature-card, .model-card, .phase, .team-card, .market-stat, .scroll-cue').forEach(el => {
       el.addEventListener('mouseenter', () => cursorRing.classList.add('hovering'));
       el.addEventListener('mouseleave', () => cursorRing.classList.remove('hovering'));
     });
@@ -2408,13 +2512,22 @@
     mouse.y = e.clientY;
   });
 
-  // ========== NAV SCROLL + ACTIVE LINK ==========
+  // ========== NAV SCROLL + ACTIVE LINK + AUTO-HIDE ==========
   const navbar = document.getElementById('navbar');
   const navLinks = document.querySelectorAll('[data-nav]');
   const navSections = Array.from(navLinks).map(a => document.querySelector(a.getAttribute('href')));
+  let lastScrollY = window.scrollY;
 
   window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
+    const y = window.scrollY;
+    navbar.classList.toggle('scrolled', y > 40);
+
+    if (y > lastScrollY && y > 200) {
+      navbar.classList.add('nav-hidden');
+    } else {
+      navbar.classList.remove('nav-hidden');
+    }
+    lastScrollY = y;
 
     let currentIndex = -1;
     navSections.forEach((sec, i) => {
@@ -2425,12 +2538,44 @@
     navLinks.forEach((a, i) => a.classList.toggle('active', i === currentIndex));
 
     const btt = document.getElementById('back-to-top');
-    btt.classList.toggle('visible', window.scrollY > 700);
+    btt.classList.toggle('visible', y > 700);
+
+    updateProgress();
   }, { passive: true });
 
   document.getElementById('back-to-top').addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   });
+
+  // ========== HERO SCROLL CUE FADE ==========
+  const scrollCue = document.getElementById('scrollCue');
+  if (scrollCue) {
+    window.addEventListener('scroll', () => {
+      scrollCue.style.opacity = Math.max(0, 1 - window.scrollY / 220);
+    }, { passive: true });
+    scrollCue.addEventListener('click', () => {
+      document.querySelector('#problem').scrollIntoView({ behavior: 'smooth' });
+    });
+  }
+
+  // ========== HERO PARALLAX ==========
+  const heroVisualEl = document.querySelector('.hero-visual');
+  if (heroVisualEl) {
+    // Release the load-in animation once it completes so the scroll-driven
+    // inline transform below isn't fought by the animation's held value.
+    heroVisualEl.addEventListener('animationend', function releaseHeroAnim(e) {
+      if (e.animationName === 'fadeUp') {
+        heroVisualEl.style.animation = 'none';
+        heroVisualEl.style.opacity = '1';
+        heroVisualEl.removeEventListener('animationend', releaseHeroAnim);
+      }
+    });
+  }
+  window.addEventListener('scroll', () => {
+    if (window.scrollY < window.innerHeight && heroVisualEl) {
+      heroVisualEl.style.transform = `translateY(${window.scrollY * 0.18}px)`;
+    }
+  }, { passive: true });
 
   // ========== 3D DEVICE MOUSE TILT ==========
   const device = document.getElementById('device3d');
@@ -2559,8 +2704,24 @@
     });
   }, observerOptions);
 
-  document.querySelectorAll('.stat-item, .problem-card, .feature-card, .validation-card, .market-stat, .model-card, .phase, .team-card, .section-header, .comp-table-wrap, .market-note, .ask-box').forEach((el, i) => {
-    el.dataset.delay = (i % 4) * 80;
+  const staggerGroups = [
+    '.stats-grid > .stat-item',
+    '.problem-grid > .problem-card',
+    '.solution-grid > .feature-card',
+    '.market-grid > .market-stat',
+    '.model-grid > .model-card',
+    '.roadmap > .phase',
+    '.team-grid > .team-card'
+  ];
+  staggerGroups.forEach(sel => {
+    document.querySelectorAll(sel).forEach((el, i) => {
+      el.dataset.delay = i * 100;
+      observer.observe(el);
+    });
+  });
+
+  document.querySelectorAll('.validation-card, .section-header, .comp-table-wrap, .market-note, .ask-box').forEach(el => {
+    el.dataset.delay = 0;
     observer.observe(el);
   });
 
