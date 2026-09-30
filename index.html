@@ -4152,7 +4152,7 @@ body.modal-open{overflow:hidden}
 <style id="salinepro-final-media-cursor-polish">
 /* Final media/cursor polish — single source of visual truth */
 html, body { cursor: none !important; }
-.cursor-dot, .cursor-ring { z-index: 25000 !important; }
+.cursor-dot, .cursor-ring { z-index: 50000 !important; }
 .media-modal, .media-modal * { cursor: none !important; }
 
 .hero-proof-rail{margin-top:1.7rem;max-width:720px}
@@ -4183,6 +4183,40 @@ html, body { cursor: none !important; }
 @media(max-width:520px){.hero-proof-btn{grid-template-columns:34px 1fr auto;padding:9px 10px}.hero-proof-icon{width:34px;height:34px}.hero-proof-btn b{font-size:.64rem}.hero-proof-btn small{font-size:.58rem}}
 @media (hover:none),(pointer:coarse){html,body,.media-modal,.media-modal *{cursor:auto !important}.cursor-dot,.cursor-ring{display:none !important}}
 @media(prefers-reduced-motion:reduce){.hero-proof-label span,.hero-proof-btn,.hero-proof-btn::before,.hero-proof-icon{animation:none!important;transition:none!important}}
+</style>
+
+
+<style id="salinepro-media-lightbox">
+.hero-proof-btn, .media-action, .media-proof-download { font-family: inherit; }
+.hero-proof-btn, .media-action, .media-proof-download { -webkit-appearance:none; appearance:none; }
+.hero-proof-btn, .media-action { width:100%; text-align:left; }
+.media-proof-download { cursor:none !important; }
+.media-modal.media-single-modal .media-modal-panel { width:min(1180px,calc(100vw - 24px)); }
+.media-viewer { position:fixed; inset:0; z-index:26000; display:grid; place-items:center; padding:18px; background:rgba(2,6,12,.88); backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px); opacity:0; visibility:hidden; pointer-events:none; transition:opacity .28s ease,visibility .28s ease; }
+.media-viewer.open { opacity:1; visibility:visible; pointer-events:auto; }
+.media-viewer-panel { width:min(1280px,calc(100vw - 24px)); height:min(92vh,920px); display:grid; grid-template-rows:auto 1fr auto; overflow:hidden; border:1px solid rgba(96,165,250,.22); border-radius:20px; background:linear-gradient(145deg,#0f1725,#070c15); box-shadow:0 45px 120px rgba(0,0,0,.62),0 0 70px rgba(59,130,246,.1); transform:translateY(10px) scale(.985); transition:transform .35s cubic-bezier(.16,1,.3,1); }
+.media-viewer.open .media-viewer-panel { transform:none; }
+.media-viewer-head { display:flex; align-items:center; justify-content:space-between; gap:14px; padding:13px 16px; border-bottom:1px solid rgba(148,163,184,.09); }
+.media-viewer-title { min-width:0; }
+.media-viewer-title strong { display:block; font:800 .86rem/1.2 'Space Grotesk',sans-serif; letter-spacing:.05em; text-transform:uppercase; color:#f1f5f9; }
+.media-viewer-title span { display:block; margin-top:4px; color:var(--text-muted); font-size:.66rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.media-viewer-actions { display:flex; align-items:center; gap:7px; }
+.media-viewer-btn { width:34px; height:34px; border:1px solid rgba(148,163,184,.12); border-radius:9px; background:rgba(255,255,255,.03); color:var(--text-secondary); display:grid; place-items:center; cursor:none; transition:.22s; }
+.media-viewer-btn:hover { color:#fff; border-color:rgba(96,165,250,.3); background:rgba(59,130,246,.08); transform:translateY(-1px); }
+.media-viewer-stage { position:relative; display:grid; place-items:center; min-height:0; overflow:hidden; padding:18px; background:radial-gradient(circle at 50% 45%,rgba(59,130,246,.06),transparent 58%); }
+.media-viewer-stage::before { content:""; position:absolute; inset:0; pointer-events:none; background:linear-gradient(90deg,rgba(96,165,250,.025) 1px,transparent 1px),linear-gradient(rgba(96,165,250,.025) 1px,transparent 1px); background-size:36px 36px; mask-image:radial-gradient(circle at center,#000 0 30%,transparent 78%); opacity:.7; }
+.media-viewer-image-wrap { position:relative; z-index:1; width:100%; height:100%; display:grid; place-items:center; overflow:auto; scrollbar-width:thin; }
+.media-viewer img { display:block; max-width:100%; max-height:100%; width:auto; height:auto; object-fit:contain; transform-origin:center center; transition:transform .18s ease; user-select:none; -webkit-user-drag:none; border-radius:10px; box-shadow:0 18px 50px rgba(0,0,0,.32); }
+.media-viewer.zoomed .media-viewer-image-wrap { align-items:flex-start; justify-items:flex-start; }
+.media-viewer.zoomed img { max-width:none; max-height:none; cursor:grab; }
+.media-viewer.zoomed img:active { cursor:grabbing; }
+.media-viewer-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-top:1px solid rgba(148,163,184,.09); }
+.media-viewer-meta { color:var(--text-muted); font-size:.65rem; }
+.media-viewer-download { display:inline-flex; align-items:center; gap:8px; padding:9px 13px; border:1px solid rgba(96,165,250,.22); border-radius:9px; background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(30,64,175,.08)); color:#dbeafe; text-decoration:none; font:800 .66rem/1 'Space Grotesk',sans-serif; letter-spacing:.06em; text-transform:uppercase; cursor:none; transition:.25s; }
+.media-viewer-download:hover { transform:translateY(-1px); border-color:rgba(96,165,250,.4); box-shadow:0 10px 24px rgba(59,130,246,.12); }
+.media-single-modal .media-single-stage { height:calc(92vh - 125px); }
+@media(max-width:700px){ .media-viewer { padding:8px; } .media-viewer-panel{width:100%;height:94vh;border-radius:16px;} .media-viewer-stage{padding:10px;} .media-viewer-foot{align-items:flex-start;flex-direction:column;} .media-viewer-download{width:100%;justify-content:center;} .media-viewer-title span{max-width:46vw;} }
+@media(prefers-reduced-motion:reduce){.media-viewer,.media-viewer-panel,.media-viewer img,.media-viewer-btn,.media-viewer-download{transition:none!important}}
 </style>
 
 </head>
@@ -4400,11 +4434,11 @@ html, body { cursor: none !important; }
             <span><b>Product Photos</b><small>Pro 1–4</small></span>
             <i>↗</i>
           </button>
-          <a class="hero-proof-btn certificate magnetic" href="./certificate.jpeg" download="certificate.jpeg">
+          <button type="button" class="hero-proof-btn certificate magnetic" data-media-open="certificate">
             <span class="hero-proof-icon" aria-hidden="true">
               <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.8h8l4 4V21a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.8a1 1 0 0 1 1-1Z"/><path d="M14 2.8V7h4"/><path d="M8 12h8M8 15h6"/><path d="m9.3 18.5 1.2.9 1.2-.9 1.2.9 1.2-.9"/></svg>
             </span>
-            <span><b>Hospital Certificate</b><small>Verified evaluation</small></span>
+            <span><b>Hospital Certificate</b><small>View · zoom · download</small></span>
             <i>↓</i>
           </a>
           <button type="button" class="hero-proof-btn magnetic" data-media-open="app">
@@ -4579,18 +4613,18 @@ html, body { cursor: none !important; }
         </span>
         <span class="media-action copy">
           <span class="media-action-title">Product Photos</span>
-          <span class="media-action-sub">Open Pro 1 · Pro 2 · Pro 3 · Pro 4</span>
+          <span class="media-action-sub">Open · full screen · zoom · download</span>
         </span>
         <span class="media-action-arrow" aria-hidden="true">↗</span>
       </button>
 
-      <a class="media-action certificate magnetic" href="./certificate.jpeg" download="certificate.jpeg">
+      <button type="button" class="media-action certificate magnetic" data-media-open="certificate">
         <span class="media-action-icon" aria-hidden="true">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2.8h8l4 4V21a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.8a1 1 0 0 1 1-1Z"/><path d="M14 2.8V7h4"/><path d="M8 12h8M8 15h6"/><path d="m9.3 18.5 1.2.9 1.2-.9 1.2.9 1.2-.9"/></svg>
         </span>
         <span class="media-action copy">
           <span class="media-action-title">Hospital Certificate</span>
-          <span class="media-action-sub">Download the evaluation certificate</span>
+          <span class="media-action-sub">View full certificate · zoom · download</span>
         </span>
         <span class="media-action-arrow" aria-hidden="true">↓</span>
       </a>
@@ -4601,7 +4635,7 @@ html, body { cursor: none !important; }
         </span>
         <span class="media-action copy">
           <span class="media-action-title">App Interface</span>
-          <span class="media-action-sub">Open Pic 1 · Pic 2 · Pic 3 · Pic 4 · Pic 5 · Pic 6 · Pic 7</span>
+          <span class="media-action-sub">Open · full screen · zoom · download</span>
         </span>
         <span class="media-action-arrow" aria-hidden="true">↗</span>
       </button>
@@ -4621,7 +4655,7 @@ html, body { cursor: none !important; }
           <span>Device IDs<b>SC0426001 · SC0426002 · SC0426003</b></span>
           <span>Evaluation window<b>01 May 2026 – 23 May 2026</b></span>
         </div>
-        <a class="media-proof-download magnetic" href="./certificate.jpeg" download="certificate.jpeg">
+        <button type="button" class="media-proof-download magnetic" data-media-open="certificate">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg>
           Download certificate
         </a>
@@ -4651,6 +4685,52 @@ html, body { cursor: none !important; }
       <button type="button" class="media-modal-close" data-media-close="app" aria-label="Close app interface">×</button>
     </div>
     <div class="media-gallery app-gallery" id="app-gallery"></div>
+  </div>
+</div>
+
+<!-- CERTIFICATE VIEW MODAL -->
+<div class="media-viewer media-single-modal" id="certificate-modal" aria-hidden="true">
+  <div class="media-viewer-panel" role="dialog" aria-modal="true" aria-labelledby="certificate-view-title">
+    <div class="media-viewer-head">
+      <div class="media-viewer-title"><strong id="certificate-view-title">Hospital Certificate</strong><span>Saveetha Medical College &amp; Hospital · Evaluation document</span></div>
+      <div class="media-viewer-actions">
+        <button type="button" class="media-viewer-btn" data-viewer-zoom-out aria-label="Zoom out">−</button>
+        <button type="button" class="media-viewer-btn" data-viewer-reset aria-label="Reset zoom">1×</button>
+        <button type="button" class="media-viewer-btn" data-viewer-zoom-in aria-label="Zoom in">+</button>
+        <button type="button" class="media-viewer-btn" data-viewer-close aria-label="Close certificate">×</button>
+      </div>
+    </div>
+    <div class="media-viewer-stage media-single-stage">
+      <div class="media-viewer-image-wrap"><img id="certificate-view-image" src="./certificate.jpeg" alt="SALINE PRO hospital evaluation certificate"></div>
+    </div>
+    <div class="media-viewer-foot">
+      <div class="media-viewer-meta">Scroll over the image to zoom · use + / − to adjust</div>
+      <a class="media-viewer-download magnetic" id="certificate-view-download" href="./certificate.jpeg" download="certificate.jpeg">Download certificate</a>
+    </div>
+  </div>
+</div>
+
+<!-- FULL IMAGE VIEWER -->
+<div class="media-viewer" id="image-viewer" aria-hidden="true">
+  <div class="media-viewer-panel" role="dialog" aria-modal="true" aria-labelledby="image-viewer-title">
+    <div class="media-viewer-head">
+      <div class="media-viewer-title"><strong id="image-viewer-title">SALINE PRO</strong><span id="image-viewer-subtitle">Image preview</span></div>
+      <div class="media-viewer-actions">
+        <button type="button" class="media-viewer-btn" data-viewer-prev aria-label="Previous image">←</button>
+        <button type="button" class="media-viewer-btn" data-viewer-zoom-out aria-label="Zoom out">−</button>
+        <button type="button" class="media-viewer-btn" data-viewer-reset aria-label="Reset zoom">1×</button>
+        <button type="button" class="media-viewer-btn" data-viewer-zoom-in aria-label="Zoom in">+</button>
+        <button type="button" class="media-viewer-btn" data-viewer-next aria-label="Next image">→</button>
+        <button type="button" class="media-viewer-btn" data-viewer-close aria-label="Close image viewer">×</button>
+      </div>
+    </div>
+    <div class="media-viewer-stage">
+      <div class="media-viewer-image-wrap" id="image-viewer-wrap"><img id="image-viewer-image" alt="SALINE PRO media preview"></div>
+    </div>
+    <div class="media-viewer-foot">
+      <div class="media-viewer-meta" id="image-viewer-meta">Scroll over the image to zoom · double-click to zoom</div>
+      <a class="media-viewer-download magnetic" id="image-viewer-download" href="#" download>Download image</a>
+    </div>
   </div>
 </div>
 
@@ -5644,7 +5724,7 @@ html, body { cursor: none !important; }
   }
 
 
-  // ========== PROOF & MEDIA GALLERIES ==========
+  // ========== PROOF & MEDIA GALLERIES + FULL VIEWER ==========
   const mediaFiles = {
     product: [
       ['pro1.jpeg','pro1.jpg','pro1.png'],
@@ -5663,6 +5743,37 @@ html, body { cursor: none !important; }
     ]
   };
 
+  const viewerState = { type: null, index: 0, src: '', filename: '', zoom: 1 };
+
+  function setViewerZoom(nextZoom) {
+    viewerState.zoom = Math.max(1, Math.min(4, nextZoom));
+    const img = document.getElementById('image-viewer-image');
+    const certImg = document.getElementById('certificate-view-image');
+    if (img && document.getElementById('image-viewer').classList.contains('open')) {
+      img.style.transform = `scale(${viewerState.zoom})`;
+      document.getElementById('image-viewer').classList.toggle('zoomed', viewerState.zoom > 1);
+    }
+    if (certImg && document.getElementById('certificate-modal').classList.contains('open')) {
+      certImg.style.transform = `scale(${viewerState.zoom})`;
+      document.getElementById('certificate-modal').classList.toggle('zoomed', viewerState.zoom > 1);
+    }
+  }
+
+  function resolveMediaSources(sources, done) {
+    let i = 0;
+    const probe = () => {
+      const img = new Image();
+      img.onload = () => done(`./${sources[i]}`, sources[i]);
+      img.onerror = () => {
+        i += 1;
+        if (i < sources.length) probe();
+        else done(null, null);
+      };
+      img.src = `./${sources[i]}`;
+    };
+    probe();
+  }
+
   function buildMediaGallery(type) {
     const target = document.getElementById(type === 'product' ? 'product-gallery' : 'app-gallery');
     if (!target || target.dataset.ready === '1') return;
@@ -5671,16 +5782,14 @@ html, body { cursor: none !important; }
       const tile = document.createElement('figure');
       tile.className = 'media-tile';
       tile.dataset.missing = `Upload ${sources[0]} to GitHub`;
+      tile.setAttribute('tabindex', '0');
+      tile.setAttribute('role', 'button');
       const img = document.createElement('img');
       let sourceIndex = 0;
       const tryNextSource = () => {
         sourceIndex += 1;
-        if (sourceIndex < sources.length) {
-          img.src = `./${sources[sourceIndex]}`;
-        } else {
-          tile.classList.add('missing');
-          img.style.display = 'none';
-        }
+        if (sourceIndex < sources.length) img.src = `./${sources[sourceIndex]}`;
+        else { tile.classList.add('missing'); img.style.display = 'none'; }
       };
       img.src = `./${sources[0]}`;
       img.alt = `${type === 'product' ? 'SALINE PRO product photo' : 'SALINE PRO app interface'} ${index + 1}`;
@@ -5692,12 +5801,19 @@ html, body { cursor: none !important; }
       tile.appendChild(img);
       tile.appendChild(label);
       target.appendChild(tile);
+      const open = () => openImageViewer(type, index);
+      tile.addEventListener('click', open);
+      tile.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
       tile.addEventListener('mouseenter', () => cursorRing?.classList.add('hovering'));
       tile.addEventListener('mouseleave', () => cursorRing?.classList.remove('hovering'));
     });
   }
 
   function openMediaModal(type) {
+    if (type === 'certificate') {
+      openCertificateViewer();
+      return;
+    }
     const modal = document.getElementById(type === 'product' ? 'product-modal' : 'app-modal');
     if (!modal) return;
     buildMediaGallery(type);
@@ -5713,7 +5829,74 @@ html, body { cursor: none !important; }
     if (!modal) return;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
-    if (!document.querySelector('.media-modal.open')) document.body.classList.remove('modal-open');
+    if (!document.querySelector('.media-modal.open') && !document.querySelector('.media-viewer.open')) document.body.classList.remove('modal-open');
+  }
+
+  function openCertificateViewer() {
+    const modal = document.getElementById('certificate-modal');
+    const img = document.getElementById('certificate-view-image');
+    if (!modal || !img) return;
+    viewerState.zoom = 1;
+    img.style.transform = 'scale(1)';
+    modal.classList.remove('zoomed');
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+  }
+
+  function closeCertificateViewer() {
+    const modal = document.getElementById('certificate-modal');
+    if (!modal) return;
+    modal.classList.remove('open','zoomed');
+    modal.setAttribute('aria-hidden', 'true');
+    if (!document.querySelector('.media-modal.open') && !document.querySelector('.media-viewer.open')) document.body.classList.remove('modal-open');
+  }
+
+  function openImageViewer(type, index) {
+    const viewer = document.getElementById('image-viewer');
+    if (!viewer) return;
+    const sources = mediaFiles[type]?.[index];
+    if (!sources) return;
+    viewerState.type = type;
+    viewerState.index = index;
+    viewerState.zoom = 1;
+    resolveMediaSources(sources, (src, filename) => {
+      if (!src) return;
+      viewerState.src = src;
+      viewerState.filename = filename;
+      const img = document.getElementById('image-viewer-image');
+      const dl = document.getElementById('image-viewer-download');
+      const title = document.getElementById('image-viewer-title');
+      const subtitle = document.getElementById('image-viewer-subtitle');
+      const meta = document.getElementById('image-viewer-meta');
+      img.src = src;
+      img.alt = `${type === 'product' ? 'SALINE PRO product photo' : 'SALINE PRO app interface'} ${index + 1}`;
+      img.style.transform = 'scale(1)';
+      dl.href = src;
+      dl.download = filename;
+      title.textContent = type === 'product' ? `SALINE PRO · Pro ${index + 1}` : `SALINE PRO · Pic ${index + 1}`;
+      subtitle.textContent = type === 'product' ? 'Product photo · full resolution preview' : 'App interface · full resolution preview';
+      meta.textContent = `Image ${index + 1} of ${mediaFiles[type].length} · Scroll over image to zoom · double-click to zoom`;
+      viewer.classList.remove('zoomed');
+      viewer.classList.add('open');
+      viewer.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+    });
+  }
+
+  function closeImageViewer() {
+    const viewer = document.getElementById('image-viewer');
+    if (!viewer) return;
+    viewer.classList.remove('open','zoomed');
+    viewer.setAttribute('aria-hidden', 'true');
+    if (!document.querySelector('.media-modal.open') && !document.querySelector('.media-viewer.open')) document.body.classList.remove('modal-open');
+  }
+
+  function stepViewer(delta) {
+    if (!viewerState.type) return;
+    const total = mediaFiles[viewerState.type].length;
+    const next = (viewerState.index + delta + total) % total;
+    openImageViewer(viewerState.type, next);
   }
 
   document.querySelectorAll('[data-media-open]').forEach(btn => {
@@ -5727,11 +5910,51 @@ html, body { cursor: none !important; }
       if (e.target === modal) closeMediaModal(modal.id.replace('-modal',''));
     });
   });
+
+  document.querySelectorAll('[data-viewer-close]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const viewer = btn.closest('.media-viewer');
+      if (viewer?.id === 'certificate-modal') closeCertificateViewer();
+      else closeImageViewer();
+    });
+  });
+  document.querySelectorAll('[data-viewer-zoom-in]').forEach(btn => btn.addEventListener('click', () => setViewerZoom(viewerState.zoom + .25)));
+  document.querySelectorAll('[data-viewer-zoom-out]').forEach(btn => btn.addEventListener('click', () => setViewerZoom(viewerState.zoom - .25)));
+  document.querySelectorAll('[data-viewer-reset]').forEach(btn => btn.addEventListener('click', () => setViewerZoom(1)));
+  document.querySelectorAll('[data-viewer-prev]').forEach(btn => btn.addEventListener('click', () => stepViewer(-1)));
+  document.querySelectorAll('[data-viewer-next]').forEach(btn => btn.addEventListener('click', () => stepViewer(1)));
+
+  document.querySelectorAll('.media-viewer-stage').forEach(stage => {
+    stage.addEventListener('wheel', (e) => {
+      if (!document.querySelector('.media-viewer.open')) return;
+      e.preventDefault();
+      setViewerZoom(viewerState.zoom + (e.deltaY < 0 ? .2 : -.2));
+    }, { passive: false });
+  });
+
+  document.getElementById('image-viewer-image')?.addEventListener('dblclick', () => setViewerZoom(viewerState.zoom > 1 ? 1 : 2));
+  document.getElementById('certificate-view-image')?.addEventListener('dblclick', () => setViewerZoom(viewerState.zoom > 1 ? 1 : 2));
+
+  document.querySelectorAll('.media-viewer').forEach(viewer => {
+    viewer.addEventListener('click', (e) => {
+      if (e.target === viewer) viewer.id === 'certificate-modal' ? closeCertificateViewer() : closeImageViewer();
+    });
+  });
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
+      closeCertificateViewer();
+      closeImageViewer();
       document.querySelectorAll('.media-modal.open').forEach(modal => closeMediaModal(modal.id.replace('-modal','')));
     }
+    if (document.getElementById('image-viewer')?.classList.contains('open')) {
+      if (e.key === 'ArrowLeft') stepViewer(-1);
+      if (e.key === 'ArrowRight') stepViewer(1);
+      if (e.key === '+' || e.key === '=') setViewerZoom(viewerState.zoom + .25);
+      if (e.key === '-') setViewerZoom(viewerState.zoom - .25);
+    }
   });
+
 </script>
 </body>
 </html>
